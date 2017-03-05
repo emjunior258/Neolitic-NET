@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
+# Visual Studio 2012
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neolitic-NET", "Neolitic-NET\Neolitic-NET.csproj", "{B9391717-AE5A-4EF9-A3EF-7B9FA04D5D5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neolitic-Test", "Neolitic-Test\Neolitic-Test.csproj", "{D562FFD5-5242-404A-9884-62BD51B53F1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B9391717-AE5A-4EF9-A3EF-7B9FA04D5D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9391717-AE5A-4EF9-A3EF-7B9FA04D5D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9391717-AE5A-4EF9-A3EF-7B9FA04D5D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D562FFD5-5242-404A-9884-62BD51B53F1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D562FFD5-5242-404A-9884-62BD51B53F1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D562FFD5-5242-404A-9884-62BD51B53F1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D562FFD5-5242-404A-9884-62BD51B53F1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
