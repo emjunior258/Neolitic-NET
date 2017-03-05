@@ -257,6 +257,7 @@ namespace Neolitic
                 IExecutionContext context = _contextFactory.CreateContext(command, info, arguments);
                 context.Service = info;
                 context.Arguments = arguments;
+				context.Container = this;
 
                 MethodInfo serviceMethodInfo = null;
 				Object invocationTarget = null;
@@ -268,8 +269,10 @@ namespace Neolitic
 				//Initialize context for current Thread
 				BaseContextualized.Initialize(context);
 
-				foreach(KeywordToken token in tokens)
+				foreach(KeywordToken token in tokens){
+					token.Container = this;
 					context.Keywords.Set(token);
+				}
 
 				//Put the argument values in the context
 				context.Keywords.InitializeTokens(context);
@@ -296,13 +299,15 @@ namespace Neolitic
 
 			String message = "";
 
-			if(context.ExecutionFailed)
-				message = _errMessageResolver.Resolve(context.ErrorCode);
+			if (context.ExecutionFailed) {
+				message = _errMessageResolver.Resolve (context.ErrorCode);
+				context.Keywords.Set ("error", context.ErrorCode);
+			}
 			else
 				message = info.SuccessMessage;
 
 
-			message = context.Keywords.Apply(this,message);
+			message = context.Keywords.Apply(message);
 			ExecutionResult result = new ExecutionResult(context,message);
 			return result;
 
@@ -311,7 +316,10 @@ namespace Neolitic
 
         public void Start(IContextFactory contextFactory, IServiceIdentifier serviceIdentifier, IErrorMessageResolver errMessageResolver)
         {
-            throw new NotImplementedException();
+			//TODO: Throw exception: Container already started
+			this._contextFactory = contextFactory;
+			this._serviceIdentifier = serviceIdentifier;
+			this._errMessageResolver = errMessageResolver;
         }
 
 

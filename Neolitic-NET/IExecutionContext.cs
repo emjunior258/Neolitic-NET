@@ -85,5 +85,7 @@ namespace Neolitic
 		String NullToken {get;set;}
 
 
+		Object Get(String name);
+
     }
 }

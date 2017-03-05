@@ -22,7 +22,7 @@ namespace Neolitic
 
 		}
 
-        public IExecutionContext Context {
+        public IExecutionContext Command {
             protected set { _contextLocal.Value = value;  }
             get { return _contextLocal.Value; }
         }

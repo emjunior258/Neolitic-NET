@@ -34,10 +34,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Test.cs" />
+    <Compile Include="App\EDMCredelec.cs" />
+    <Compile Include="App\PinCapturer.cs" />
+    <Compile Include="App\MoneyParser.cs" />
+    <Compile Include="App\ServiceIdentifier.cs" />
+    <Compile Include="App\ContextFactory.cs" />
+    <Compile Include="App\ErrorResolver.cs" />
+    <Compile Include="CredelecServicesTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Neolitic-NET\Neolitic-NET.csproj">
+      <Project>{B9391717-AE5A-4EF9-A3EF-7B9FA04D5D5D}</Project>
+      <Name>Neolitic-NET</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

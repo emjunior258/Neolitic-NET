@@ -10,42 +10,52 @@ namespace Neolitic
 
 		private IDictionary<String,KeywordToken> _tokens = new Dictionary<String,KeywordToken> ();
 		private IDictionary<String,Object> _values = new Dictionary<String,Object> ();
+		private IExecutionContext _context = null;
 
-		#region ICommandKeywords implementation
+
 		public string GetString (string name)
 		{
 			throw new NotImplementedException ();
 		}
+
 		public int GetInt (string name)
 		{
 			throw new NotImplementedException ();
 		}
+
 		public double GetDouble (string name)
 		{
 			throw new NotImplementedException ();
 		}
+
 		public decimal GetDecimal (string name)
 		{
 			throw new NotImplementedException ();
 		}
+
 		public bool GetBoolean (string name)
 		{
 			throw new NotImplementedException ();
 		}
+
 		public T Get<T> (string name)
 		{
 			throw new NotImplementedException ();
 		}
+
 		public void Set (string name, object value)
 		{
-			throw new NotImplementedException ();
+			_values.Add (name, value);
 		}
+
 		public void Set (KeywordToken token)
 		{
-			throw new NotImplementedException ();
+			_tokens.Add (token.Name, token);
 		}
+
 		public void InitializeTokens (IExecutionContext context)
 		{
+			_context = context;
 			foreach (KeywordToken token in _tokens.Values)
 				token.Initialize(context);
 
@@ -59,6 +69,7 @@ namespace Neolitic
 
 				KeywordToken token = null;
 				_tokens.TryGetValue (name, out token);
+				token.Container = _context.Container;
 				value = token.GetValue (this);
 
 			}else if(_values.ContainsKey(name)){
@@ -95,7 +106,7 @@ namespace Neolitic
 			return _values.ContainsKey(name);
 		}
 
-		public string Apply (IContainer container, string target)
+		public string Apply (string target)
 		{
 			String result = target;
 
@@ -111,10 +122,10 @@ namespace Neolitic
 
 					token = new KeywordToken ();
 					token.Name = name;
-					token.Container = container;
 
 				}
 
+				token.Container = _context.Container;
 				result = token.ApplyValue (this, result);
 					
 			}
@@ -123,7 +134,6 @@ namespace Neolitic
 			
 		}
 
-		#endregion
         
     }
 }

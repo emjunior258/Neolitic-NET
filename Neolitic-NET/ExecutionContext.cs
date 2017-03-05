@@ -7,7 +7,15 @@ namespace Neolitic
 {
     public class ExecutionContext : IExecutionContext
     {
-        private ICommandKeywords _keyword = new CommandKeywords();
+
+
+		public ExecutionContext(){
+
+			this._keywords = new CommandKeywords ();
+
+		}
+
+        private ICommandKeywords _keywords = new CommandKeywords();
 
 		public bool ExecutionFailed { get; set; }
 
@@ -15,7 +23,7 @@ namespace Neolitic
         {
             get {
 
-                return _keyword;
+                return _keywords;
             }
         }
 
@@ -48,7 +56,11 @@ namespace Neolitic
 
 		public string NullToken { get; set;}
 
+		public Object Get(String name){
 
+			return Keywords.Get (name);
+
+		}
 
     }
 }

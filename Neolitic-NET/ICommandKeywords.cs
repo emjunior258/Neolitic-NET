@@ -33,7 +33,7 @@ namespace Neolitic
 
 		bool ContainsValue (string name);
 
-		String Apply (IContainer container, String target);
+		String Apply (String target);
 
 	
     }

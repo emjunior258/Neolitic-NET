@@ -26,10 +26,10 @@ namespace Neolitic
         /// <summary>
         /// Index of the token in the string this token was found.
         /// </summary>
-        public int ScanIndex { get; set; }
+        public int ArgumentIndex { get; set; }
 
         private const String MATCH_TOKENS_EXPRESSION = 
-			@"/(\{(((?<KeywordParse>@?[A-Za-z0-9]+\??)[:]{1}(?<Parser>[A-Za-z]+))|((?<KeywordFormat>@?[A-Za-z0-9]+\??)[|]{1}(?<Formatter>[A-Za-z]+))|(?<Keyword>@?[A-Za-z0-9]+\??))\})/ig";
+			@"(\{(((?<KeywordParse>@?[A-Za-z0-9]+\??)[:]{1}(?<Parser>[A-Za-z]+))|((?<KeywordFormat>@?[A-Za-z0-9]+\??)[|]{1}(?<Formatter>[A-Za-z]+))|(?<Keyword>@?[A-Za-z0-9]+\??))\})";
 
         /// <summary>
         /// Extracts from a <see cref="ICommandKeywords"/> the value correspondent to the <see cref="KeywordToken"/> and
@@ -98,7 +98,7 @@ namespace Neolitic
 				return;
 
 			this.Container = context.Container;
-			String argValue = context.Arguments.Split(' ')[ScanIndex];
+			String argValue = context.Arguments.Split(' ')[ArgumentIndex];
 			context.Keywords.Set (Name, argValue);
 
 
@@ -107,7 +107,7 @@ namespace Neolitic
 
         public static List<KeywordToken> Scan(String template)
         {        
-            Regex regex = new Regex(MATCH_TOKENS_EXPRESSION);
+            Regex regex = new Regex(MATCH_TOKENS_EXPRESSION,RegexOptions.IgnoreCase);
             MatchCollection matchCollection = regex.Matches(template);
             List<KeywordToken> tokens = new List<KeywordToken>();
 
@@ -115,22 +115,22 @@ namespace Neolitic
             foreach(Match m in matchCollection)
             {
                 KeywordToken token = new KeywordToken();
-                token.ScanIndex = scanIndex;
+                token.ArgumentIndex = scanIndex;
                 token.TokenText = m.Value;
 
-                Group keywordParser = m.Groups["KeywordParser"];
+                Group keywordParser = m.Groups["KeywordParse"];
                 Group parser = m.Groups["Parser"];
-                Group keywordFormatter = m.Groups["KeywordFormatter"];
+                Group keywordFormatter = m.Groups["KeywordFormatte"];
                 Group formatter = m.Groups["Formatter"];
                 Group keyword = m.Groups["Keyword"];
 
-                if (keywordParser != null)
+                if (keywordParser.Success)
                 { 
                     //keyword with parser
                     token.Name = keywordParser.Value;
                     token.Parser = parser.Value;    
 
-                }else if (keywordFormatter != null)
+                }else if (keywordFormatter.Success)
                 {  
                     //keyword with formatter
                     token.Name = keywordFormatter.Value;
@@ -157,14 +157,14 @@ namespace Neolitic
 
 			String[] tokens = context.Arguments.Split (' ');
 
-			if(ScanIndex>=tokens.Length){
+			if(ArgumentIndex>=tokens.Length){
 				
 				//TODO: Throw InvalidCommandArguments
 				return true;//TODO: Remove this
 
 			}
 
-			return tokens [ScanIndex] == context.NullToken;
+			return tokens [ArgumentIndex] == context.NullToken;
 
 		}
 
