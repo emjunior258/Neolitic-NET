@@ -1,0 +1,5 @@
+*.exe
+*.dll
+Neolitic-NET/obj/*
+Neolitic-NET/bin/*
+.vs/*
