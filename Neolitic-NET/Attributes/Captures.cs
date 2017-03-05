@@ -5,21 +5,12 @@ using System.Text;
 
 namespace Neolitic.Attributes
 {
-    public class Captures : Attribute
+    public class Captures : Named
     {
-        private String[] _values = null;
-
-        public String[] Values
+        
+        public Captures(String capturable):base(capturable)
         {
-            get
-            {
-                return _values;
-            }
-        }
-
-        public Captures(String[] valueNames):base()
-        {
-            this._values = valueNames;
+			
         }
     }
 }

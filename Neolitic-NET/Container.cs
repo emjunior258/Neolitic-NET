@@ -9,14 +9,40 @@ namespace Neolitic
 {
 	public class Container : IContainer
     {
-		class MappedService{
+		private class MappedService{
 
 			public Object Source {get;set;}
-
 			public MethodInfo MethodInfo { get; set;}
 
+		}
+
+
+		private class CapturerInfo
+		{
+			public String Capturable { get; set;}
+			public ICapturer Capturer { get; set;}
+			public void DoCapturation(Object value){
+
+				Capturer.Captured (value);
+			
+			}
+
+
+			public void AddTo(IDictionary<String,IList<CapturerInfo>> target){
+
+				IList<CapturerInfo> infos = null;
+				if (!target.ContainsKey (Capturable))
+					infos = new List<CapturerInfo> ();
+				else
+					target.TryGetValue (Capturable, out infos);
+
+				infos.Add (this);
+				target.Add (Capturable, infos);
+
+			}
 
 		}
+
 
 
 		public IValueFormatter GetFormatter (string name)
@@ -43,12 +69,12 @@ namespace Neolitic
 		private IDictionary<String, MappedService> _mappedServices = new Dictionary<String, MappedService>();
         private IDictionary<String,IValueFormatter> _formatters = new Dictionary<string, IValueFormatter>();
         private IDictionary<String,IValueParser> _parsers = new Dictionary<String,IValueParser>();
-        private IList<ICapturer> _capturers = new List<ICapturer>();
+		private IDictionary<String,IList<CapturerInfo>> _capturers = new Dictionary<String, IList<CapturerInfo>>();
 		private IDictionary<String,IList<KeywordToken>> _serviceTokens = new Dictionary<String,IList<KeywordToken>> ();
 
-        public void MapServices(Object holder)
+        public void MapServices(Object servicesHolder)
         {
-			MethodInfo[] methods =  holder.GetType().GetMethods ();
+			MethodInfo[] methods =  servicesHolder.GetType().GetMethods ();
 			foreach (MethodInfo method in methods) {
 
 				if (!method.IsPublic)
@@ -65,7 +91,7 @@ namespace Neolitic
 						_serviceTokens.Add (service.Name, tokens);
 
 						MappedService mapped = new MappedService();
-						mapped.Source = holder;
+						mapped.Source = servicesHolder;
 						mapped.MethodInfo = method;
 						_mappedServices.Add (service.Name, mapped);
 
@@ -111,10 +137,57 @@ namespace Neolitic
             _parsers.Add(name,parser);
         }
 
-        public void AddCapturer(ICapturer interpreter)
+        public void AddCapturer(ICapturer capturer)
         {
-			_capturers.Add(interpreter);
+
+			object[] attributes = capturer.GetType ().GetCustomAttributes (false);
+			foreach (Object attribute in attributes) {
+
+				if (attribute is Captures) {
+
+					Captures cap = (Captures)attribute;
+					CapturerInfo capturableInfo = new CapturerInfo ();
+					capturableInfo.Capturer = capturer;
+					capturableInfo.Capturable = cap.Name;
+					capturableInfo.AddTo (_capturers);
+					break;
+
+				}
+
+			}
+
+
+			//TODO: Throw exception: [Captures] attribute is missing
         }
+
+
+		private void HandleCapturables(IList<KeywordToken> tokens, IExecutionContext context){
+
+			foreach (KeywordToken token in tokens) {
+
+				if (!token.Capturable)
+					continue;
+
+				Object value = token.GetValue (context.Keywords);
+				FireCapturers (token.Name, value);
+
+			}
+
+		}
+
+
+		private void FireCapturers(String capturable, Object value){
+
+			if (!_capturers.ContainsKey (capturable))
+				return;
+			
+			IList<CapturerInfo> capturers = null;
+			_capturers.TryGetValue (capturable, out capturers);
+			foreach (CapturerInfo capturer in capturers) 
+				capturer.DoCapturation (value);
+
+		}
+
 
 		private MethodInfo GetServiceMethodInfo(String name, out Object target)
         {
@@ -152,12 +225,18 @@ namespace Neolitic
 				_serviceTokens.TryGetValue(info.Name, out tokens);
 
 
+				//Initialize context for current Thread
+				BaseContextualized.Initialize(context);
+
+
 				foreach(KeywordToken token in tokens)
 					context.Keywords.Set(token);
 
 				//Put the argument values in the context
 				context.Keywords.InitializeTokens(context);
-				
+
+				//Call capturers
+				HandleCapturables(tokens,context);
 
                 bool stopExecution = false;
                 try
@@ -215,7 +294,12 @@ namespace Neolitic
             catch (Exception ex)
             {
                 throw new ContainerException("An Unexpected Exception was thrown during the command execution", ex,command);
-            }
+			
+			}finally{
+
+				BaseContextualized.Clean();
+
+			}
         }
 
 

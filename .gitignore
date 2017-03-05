@@ -2,4 +2,6 @@
 *.dll
 Neolitic-NET/obj/*
 Neolitic-NET/bin/*
+Neolitic-Test/bin/*
+Neolitic-Test/obj/*
 .vs/*
