@@ -21,8 +21,20 @@ namespace Neolitic
 
         void Set(String name, Object value);
 
+		void Set (KeywordToken token);
+
+		void InitializeTokens (IExecutionContext context);
+
         Object Get(String name);
 
+		Object GetValue (String name);
+
         bool Contains(String name);
+
+		bool ContainsValue (string name);
+
+		String Apply (IContainer container, String target);
+
+	
     }
 }

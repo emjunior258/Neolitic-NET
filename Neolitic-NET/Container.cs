@@ -3,43 +3,135 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Neolitic.Attributes;
 
 namespace Neolitic
 {
-    public class Container : IContainer
+	public class Container : IContainer
     {
+		class MappedService{
+
+			public Object Source {get;set;}
+
+			public MethodInfo MethodInfo { get; set;}
+
+
+		}
+
+
+		public IValueFormatter GetFormatter (string name)
+		{
+			IValueFormatter formatter = null;
+			_formatters.TryGetValue (name, out formatter);
+
+			return formatter;
+				
+		}
+
+		public IValueParser GetParser (string name)
+		{
+
+			IValueParser parser = null;
+			_parsers.TryGetValue (name, out parser);
+			return parser;
+
+		}
+
         private IContextFactory _contextFactory;
         private IServiceIdentifier _serviceIdentifier;
         private IErrorMessageResolver _errMessageResolver;
-        private IDictionary<String, Object> _featureObjects = new Dictionary<String, Object>();
-        private IDictionary<String, MethodInfo> _mappedServices = new Dictionary<String, MethodInfo>();
-        private IList<IValueFormatter> _formatters = new List<IValueFormatter>();
-        private IList<IValueParser> _parsers = new List<IValueParser>();
-        private IList<IValuesInterpreter> _interpreters = new List<IValuesInterpreter>();
+		private IDictionary<String, MappedService> _mappedServices = new Dictionary<String, MappedService>();
+        private IDictionary<String,IValueFormatter> _formatters = new Dictionary<string, IValueFormatter>();
+        private IDictionary<String,IValueParser> _parsers = new Dictionary<String,IValueParser>();
+        private IList<ICapturer> _capturers = new List<ICapturer>();
+		private IDictionary<String,IList<KeywordToken>> _serviceTokens = new Dictionary<String,IList<KeywordToken>> ();
 
-        public void AddFeature(IFeature feature)
+        public void MapServices(Object holder)
         {
-            //TODO: Scan mappend service methods
+			MethodInfo[] methods =  holder.GetType().GetMethods ();
+			foreach (MethodInfo method in methods) {
+
+				if (!method.IsPublic)
+					continue;
+
+						
+				Object[] attributes = method.GetCustomAttributes(false);
+				foreach (Object attribute in attributes) {
+
+					if(attribute is Service){
+
+						Service service = (Service)attribute;
+						IList<KeywordToken> tokens = KeywordToken.Scan (service.CommandMapping);
+						_serviceTokens.Add (service.Name, tokens);
+
+						MappedService mapped = new MappedService();
+						mapped.Source = holder;
+						mapped.MethodInfo = method;
+						_mappedServices.Add (service.Name, mapped);
+
+						break;
+
+					}
+
+					//TODO: Thow exception:  duplicated service mapping
+
+				}
+
+
+			}
         }
+
+
+		private String getName(Object target){
+
+			Object[] attributes = target.GetType ().GetCustomAttributes (false);
+			foreach (Object attribute in attributes) {
+				
+				if (attribute is Named)
+					return ((Named)attribute).Name;
+				
+			}	
+
+			//TODO: Throw exception: Named attribute not found
+			return null;
+
+
+		}
+
 
         public void AddFormatter(IValueFormatter formatter)
         {
-            _formatters.Add(formatter);
+			String name = getName (formatter);
+            _formatters.Add(name,formatter);
         }
 
         public void AddParser(IValueParser parser)
         {
-            _parsers.Add(parser);
+			String name = getName (parser);
+            _parsers.Add(name,parser);
         }
 
-        public void AddValuesInterpreter(IValuesInterpreter interpreter)
+        public void AddCapturer(ICapturer interpreter)
         {
-            _interpreters.Add(interpreter);
+			_capturers.Add(interpreter);
         }
 
-        private MethodInfo GetServiceMethodInfo(String code, out Object featureObject)
+		private MethodInfo GetServiceMethodInfo(String name, out Object target)
         {
-            //TODO: Implement
+			MappedService service = null;
+
+			if (_mappedServices.ContainsKey(name))
+				_mappedServices.TryGetValue(name, out service);
+
+			if(service==null){
+				//TODO: Throw NonMappedServiceException if method is null
+				target = null;
+				return null;
+			}
+           
+
+			target = service.Source;
+			return service.MethodInfo;
         }
 
         public ExecutionResult ExecuteCommand(string command)
@@ -52,10 +144,21 @@ namespace Neolitic
                 context.Service = info;
                 context.Arguments = arguments;
 
-                //TODO Check if service code was mapped : throw UnsuportedServiceException if not mapped
                 MethodInfo serviceMethodInfo = null;
-                Object featureObject = null;
-                serviceMethodInfo = GetServiceMethodInfo(info.Code, out featureObject);
+				Object invocationTarget = null;
+				serviceMethodInfo = GetServiceMethodInfo(info.Name, out invocationTarget);
+
+				IList<KeywordToken> tokens = null;
+				_serviceTokens.TryGetValue(info.Name, out tokens);
+
+
+				foreach(KeywordToken token in tokens)
+					context.Keywords.Set(token);
+
+				//Put the argument values in the context
+				context.Keywords.InitializeTokens(context);
+				
+
                 bool stopExecution = false;
                 try
                 {
@@ -74,7 +177,7 @@ namespace Neolitic
                     try
                     {
                         //Invoke the mapped service method
-                        serviceMethodInfo.Invoke(featureObject, new Object[] { });
+                        serviceMethodInfo.Invoke(invocationTarget, new Object[] { });
                   
                     }catch(Exception ex)
                     {
@@ -94,9 +197,19 @@ namespace Neolitic
                     HandleException(ex, context);
                 }
 
-                //TODO: Compose the result message : invoke formatters
-                //TODO: Send the result message
-                //TODO: Create ExecutionResult instance
+
+				String message = "";
+
+				if(context.ExecutionFailed)
+					message = _errMessageResolver.Resolve(context.ErrorCode);
+				else
+					message = info.SuccessMessage;
+
+
+				message = context.Keywords.Apply(this,message);
+				ExecutionResult result = new ExecutionResult(context,message);
+				return result;
+
 
             }
             catch (Exception ex)
@@ -111,20 +224,6 @@ namespace Neolitic
             throw new NotImplementedException();
         }
 
-        private String ComponseResultMessage(IExecutionContext context, String template)
-        {
-            //Read keywords present in template and run the respective formatters while ignoring the non registered formatters
-        }
-
-        private List<KeywordToken> FindTokens(String template)
-        {
-            "{{}}"
-        }
-
-        private void SetTokenValues(List<KeywordToken> tokens)
-        {
-
-        }
 
         private void HandleException(Exception e, IExecutionContext context)
         {
@@ -145,15 +244,6 @@ namespace Neolitic
 
             }    
 
-        }
-
-        private class KeywordToken
-        {
-            public String[] Formatters { get; set; }
-
-            public String Key { get; set; }
-
-            public String Value { get; set; }
         }
 
     }

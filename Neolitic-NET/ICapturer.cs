@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Neolitic
 {
-    public interface IValuesInterpreter
+    public interface ICapturer
     {
         /// <summary>
         /// The values will already be parsed.

@@ -7,13 +7,13 @@ namespace Neolitic
 {
     public interface IContainer
     {
-        void AddFeature(IFeature feature);
+        void MapServices(Object servicesHolder);
 
         void AddFormatter(IValueFormatter formatter);
 
         void AddParser(IValueParser parser);
 
-        void AddValuesInterpreter(IValuesInterpreter interpreter);
+        void AddCapturer(ICapturer interpreter);
 
         void Start(IContextFactory contextFactory, IServiceIdentifier serviceIdentifier,
             IErrorMessageResolver errMessageResolver);

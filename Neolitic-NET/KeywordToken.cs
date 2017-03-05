@@ -20,6 +20,9 @@ namespace Neolitic
 
         public String Formatter { get; set; }
 
+		public IContainer Container { get; set;}
+
+
         /// <summary>
         /// Index of the token in the string this token was found.
         /// </summary>
@@ -34,16 +37,15 @@ namespace Neolitic
         /// format the value, otherwise, the value will be returned as stored in the <see cref="ICommandKeywords"/>.
         /// </summary>
         /// <param name="keywords">the <see cref="ICommandKeywords"/> from which the value must be extracted.</param>
-        /// <param name="container">the <see cref="IContainer"/> holding the <see cref="IValueFormatter"/></param>
         /// <returns>the extracted and formatted value (if a formatter is set) if found in the <see cref="ICommandKeywords"/> or null if not found</returns>
-        public String FormatValue(ICommandKeywords keywords, IContainer container)
+        public String FormatValue(ICommandKeywords keywords)
         {
-            if (keywords.Contains(Name))
+            if (!keywords.ContainsValue(Name))
                 return null;
 
-            Object value = keywords.Get(Name);
+            Object value = keywords.GetValue(Name);
             if (Formatter != null)
-                callFormatter(value, container);
+                callFormatter(value, Container);
 
             return value.ToString();
 
@@ -56,17 +58,16 @@ namespace Neolitic
         /// the <see cref="KeywordToken"/> value.
         /// </summary>
         /// <param name="keywords">the <see cref="ICommandKeywords"/> from which the value must be extracted.</param>
-        /// <param name="container">the <see cref="IContainer"/> holding the <see cref="IValueFormatter"/></param>
         /// <param name="target">the string to apply the extracted value on</param>
-        public String ApplyValue(ICommandKeywords keywords, IContainer container, String target)
+        public String ApplyValue(ICommandKeywords keywords, String target)
         {
-            String formatted = FormatValue(keywords,container);
+            String formatted = FormatValue(keywords);
             target = target.ToString();
 
             if (formatted == null)
                 return target;
 
-            return target.Replace(String.Format("{{{0}}}", TokenText), formatted); 
+			return target.Replace("{"+Name+"}", formatted); 
 
         }
 
@@ -77,19 +78,32 @@ namespace Neolitic
         /// parse the value, otherwise, the value will be returned as it is stored in the <see cref="ICommandKeywords"/>.
         /// </summary>
         /// <param name="keywords">the <see cref="ICommandKeywords"/> from which the value must be extracted.</param>
-        /// <param name="container">the <see cref="IContainer"/> holding the <see cref="IValueParser"/></param>
         /// <returns></returns>
-        public Object GetValue(ICommandKeywords keywords, IContainer container)
+        public Object GetValue(ICommandKeywords keywords)
         {
-            if (keywords.Contains(Name))
+            if (!keywords.ContainsValue(Name))
                 return null;
 
-            Object value = keywords.Get(Name);
+            Object value = keywords.GetValue(Name);
             if (Parser != null)      
-                value = callParser(value, container);
+                value = callParser(value, Container);
 
             return value;
         }
+
+
+		public void Initialize(IExecutionContext context){
+
+			if (isNull (context))
+				return;
+
+			this.Container = context.Container;
+			String argValue = context.Arguments.Split(' ')[ScanIndex];
+			context.Keywords.Set (Name, argValue);
+
+
+		}
+
 
         public static List<KeywordToken> Scan(String template)
         {        
@@ -114,7 +128,8 @@ namespace Neolitic
                 { 
                     //keyword with parser
                     token.Name = keywordParser.Value;
-                    token.Parser = parser.Value;                  
+                    token.Parser = parser.Value;    
+
                 }else if (keywordFormatter != null)
                 {  
                     //keyword with formatter
@@ -136,6 +151,22 @@ namespace Neolitic
             return tokens;
 
         }
+
+
+		public bool isNull(IExecutionContext context){
+
+			String[] tokens = context.Arguments.Split (' ');
+
+			if(ScanIndex>=tokens.Length){
+				
+				//TODO: Throw InvalidCommandArguments
+				return true;//TODO: Remove this
+
+			}
+
+			return tokens [ScanIndex] == context.NullToken;
+
+		}
 
         private static void CheckCapturability(KeywordToken token)
         {

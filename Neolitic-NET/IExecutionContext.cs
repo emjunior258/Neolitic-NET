@@ -25,13 +25,6 @@ namespace Neolitic
         /// </summary>
         ServiceInfo Service { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the <see cref="MessageTransport"/> to be used for the result message, being it failure or success;
-        /// </summary>
-        MessageTransport ReplyVia { get; set; }
-
-
         /// <summary>
         /// Tells if the active command execution failed or succeeded. 
         /// The value for this property turns True by throwing an <see cref="Exception"/> inside the mapped service method
@@ -50,39 +43,9 @@ namespace Neolitic
 
 
         /// <summary>
-        /// Checks if the current <see cref="IExecutionContext"/> implementation supports a specific <see cref="MessageTransport"/>.
-        /// </summary>
-        /// <param name="transport">the <see cref="MessageTransport"/> to check</param>
-        /// <returns>True if the <see cref="MessageTransport"/> is supported, otherwise, False</returns>
-        bool SupportsTransport(MessageTransport transport);
-
-
-        /// <summary>
-        /// Maps the params passed to the current command execution.
-        /// Mapping paramaters consists of giving a name to each of the tokens passed as parameters.
-        /// More than giving a name to each of the tokens, mapping allows to specify parsers to be used
-        /// on each of the named tokens. The named tokens will be used to populate the result message
-        /// Mapping Example without specifying parsers: {cell} {ammount}
-        /// Mapping Example specifying a parser for a token: {cell} {ammount:currency}. A parser named "currency" wil be used on the "ammount" token.
-        /// Mapping string will be parsed using the <see cref="KeywordToken.Scan(string)"/> method.
-        /// </summary>
-        /// <param name="mapping">the mapping string</param>
-        void MapParams(String mapping);
-
-        void Notify(String message, String[] recipients);
-
-        void Notify(String message, String[] recipients, MessageTransport transport);
-
-        /// <summary>
         /// Gets the ICommandKeywords instance for the current command in execution 
         /// </summary>
         ICommandKeywords Keywords { get; }
-
-        /// <summary>
-        /// Sets command keyword values. This will override and add new values.
-        /// </summary>
-        /// <param name="keywords"></param>
-        void SetKeywords(IDictionary<String, Object> keywords);
 
 
         /// <summary>
@@ -112,6 +75,15 @@ namespace Neolitic
 
 
         IContainer Container { get; set; }
+
+
+		/// <summary>
+		/// Token that represents NULL in the command in execution.
+		/// This value is used to determine if an optional token is present or not in the command.
+		/// </summary>
+		/// <value>The null token.</value>
+		String NullToken {get;set;}
+
 
     }
 }

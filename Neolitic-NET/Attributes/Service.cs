@@ -8,7 +8,15 @@ namespace Neolitic.Attributes
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public class Service : Named
     {
-        public Service(string name) : base(name)
-        {}
+
+		private String _commandMapping = null;
+
+		public Service(string name,String mapping) : base(name)
+        {
+			this._commandMapping = mapping;
+		}
+
+		public String CommandMapping {get { return _commandMapping; }}
+
     }
 }

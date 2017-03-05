@@ -8,14 +8,14 @@ namespace Neolitic
     public class ServiceInfo
     {
 
-        private String _code = null;
+		private String _name = null;
 
         public ServiceInfo(String code)
         {
-            this._code  = code;
+            this._name  = code;
         }
 
-        public String Code { get { return _code; } }
+        public String Name { get { return _name; } }
 
         public String SuccessMessage { get; set; }
 

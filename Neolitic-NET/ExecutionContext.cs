@@ -8,16 +8,8 @@ namespace Neolitic
     public class ExecutionContext : IExecutionContext
     {
         private ICommandKeywords _keyword = new CommandKeywords();
-        private bool _executionFailed = false;
-        private String _errorCode = null;
 
-        public bool ExecutionFailed
-        {
-            get
-            {
-                return _executionFailed;
-            }
-        }
+		public bool ExecutionFailed { get; set; }
 
         public ICommandKeywords Keywords
         {
@@ -27,45 +19,18 @@ namespace Neolitic
             }
         }
 
-        public MessageTransport ReplyVia { get; set; }
-
         public ServiceInfo Service { get; set; }
 
-        public string ErrorCode
-        {
-            get  {
-
-                return _errorCode;
-            }
-        }
+		public string ErrorCode { get; set; }
 
         public String Arguments { get; set; }
 
         public void Fail(string errorCode)
         {
             throw new CommandExecutionFailException(String.Format("Failing execution of {0} service with error {1}",
-                Service.Code, errorCode), errorCode);
+                Service.Name, errorCode), errorCode);
         }
-
-
-        //TODO: Think about optional tokens : consider the definition of a NULL token, so that verytime the null token if found the token presence is ignored.
-        public void MapParams(string mapping)
-        {           
-            //TODO: Scan Keyword tokens and store them in the context
-            
-            throw new NotImplementedException();
-        }
-
-        public void Notify(string message, string[] recipients)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Notify(string message, string[] recipients, MessageTransport transport)
-        {
-            throw new NotImplementedException();
-        }
-
+    
         public void OnExecutionEnd()
         {
             //Must be overriden
@@ -76,15 +41,14 @@ namespace Neolitic
             //Must be overriden
             return false;
         }
+			
+		public Exception FailureCause { get; set;}
 
-        public void SetKeywords(IDictionary<string, object> keywords)
-        {
-            throw new NotImplementedException();
-        }
+		public IContainer Container { get; set; }
 
-        public bool SupportsTransport(MessageTransport transport)
-        {          
-            return true;
-        }
+		public string NullToken { get; set;}
+
+
+
     }
 }
