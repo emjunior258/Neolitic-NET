@@ -207,6 +207,47 @@ namespace Neolitic
 			return service.MethodInfo;
         }
 
+		private void ExecuteService(IExecutionContext context, 
+			MethodInfo serviceMethodInfo, Object invocationTarget){
+			bool stopExecution = false;
+			try
+			{
+				//Command execution start hook
+				stopExecution = context.OnExecutionStart(); 
+				context.ExecutionFailed = false;
+			}
+			catch (Exception ex)
+			{
+				HandleException(ex, context);
+			}
+
+			//There is no wish to stop the command execution and the execution didn't fail earlier
+			if ((!stopExecution)&&(!context.ExecutionFailed))
+			{                  
+				try
+				{
+					//Invoke the mapped service method
+					serviceMethodInfo.Invoke(invocationTarget, new Object[] { });
+
+				}catch(Exception ex)
+				{
+					context.FailureCause = ex;
+					HandleException(ex, context);
+				}
+			}
+
+			try
+			{
+				//Command execution end hook
+				context.OnExecutionEnd();         
+
+			}catch(Exception ex)
+			{
+				context.FailureCause = ex;
+				HandleException(ex, context);
+			}
+		}
+
         public ExecutionResult ExecuteCommand(string command)
         {
             try
@@ -224,10 +265,8 @@ namespace Neolitic
 				IList<KeywordToken> tokens = null;
 				_serviceTokens.TryGetValue(info.Name, out tokens);
 
-
 				//Initialize context for current Thread
 				BaseContextualized.Initialize(context);
-
 
 				foreach(KeywordToken token in tokens)
 					context.Keywords.Set(token);
@@ -237,58 +276,9 @@ namespace Neolitic
 
 				//Call capturers
 				HandleCapturables(tokens,context);
-
-                bool stopExecution = false;
-                try
-                {
-                    //Command execution start hook
-                    stopExecution = context.OnExecutionStart(); 
-                    context.ExecutionFailed = false;
-                }
-                catch (Exception ex)
-                {
-                    HandleException(ex, context);
-                }
-
-                //There is no wish to stop the command execution and the execution didn't fail earlier
-                if ((!stopExecution)&&(!context.ExecutionFailed))
-                {                  
-                    try
-                    {
-                        //Invoke the mapped service method
-                        serviceMethodInfo.Invoke(invocationTarget, new Object[] { });
-                  
-                    }catch(Exception ex)
-                    {
-                        context.FailureCause = ex;
-                        HandleException(ex, context);
-                    }
-                }
-
-                try
-                {
-                    //Command execution end hook
-                    context.OnExecutionEnd();         
-                           
-                }catch(Exception ex)
-                {
-                    context.FailureCause = ex;
-                    HandleException(ex, context);
-                }
-
-
-				String message = "";
-
-				if(context.ExecutionFailed)
-					message = _errMessageResolver.Resolve(context.ErrorCode);
-				else
-					message = info.SuccessMessage;
-
-
-				message = context.Keywords.Apply(this,message);
-				ExecutionResult result = new ExecutionResult(context,message);
-				return result;
-
+			
+				ExecuteService(context,serviceMethodInfo,invocationTarget);
+				return GetResult(info,context);
 
             }
             catch (Exception ex)
@@ -301,6 +291,22 @@ namespace Neolitic
 
 			}
         }
+
+		private ExecutionResult GetResult(ServiceInfo info, IExecutionContext context){
+
+			String message = "";
+
+			if(context.ExecutionFailed)
+				message = _errMessageResolver.Resolve(context.ErrorCode);
+			else
+				message = info.SuccessMessage;
+
+
+			message = context.Keywords.Apply(this,message);
+			ExecutionResult result = new ExecutionResult(context,message);
+			return result;
+
+		}
 
 
         public void Start(IContextFactory contextFactory, IServiceIdentifier serviceIdentifier, IErrorMessageResolver errMessageResolver)
