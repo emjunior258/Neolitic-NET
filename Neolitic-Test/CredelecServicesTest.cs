@@ -32,7 +32,7 @@ namespace NeoliticTest
 			container.MapServices (new EDMCredelec ());
 			container.Start (new ContextFactory (), new ServiceIdentifier (), new ErrorResolver ());
 
-			ExecutionResult result = container.ExecuteCommand ("BIM EDMA NULL 1234");
+			ExecutionResult result = container.ExecuteCommand ("BIM EDMA <NULL> 1234");
 			Assert.False (result.Context.ExecutionFailed);
 			Assert.True (result.Message.Equals ("The Last recharge amount is 4500 MZN"));
 
