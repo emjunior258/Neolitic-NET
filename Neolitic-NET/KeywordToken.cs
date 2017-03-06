@@ -45,7 +45,7 @@ namespace Neolitic
 
             Object value = keywords.GetValue(Name);
             if (Formatter != null)
-                callFormatter(value, Container);
+                value = callFormatter(value, Container);
 
             return value.ToString();
 
@@ -67,7 +67,7 @@ namespace Neolitic
             if (formatted == null)
                 return target;
 
-			return target.Replace("{"+Name+"}", formatted); 
+			return target.Replace(TokenText, formatted); 
 
         }
 
@@ -120,7 +120,7 @@ namespace Neolitic
 
                 Group keywordParser = m.Groups["KeywordParse"];
                 Group parser = m.Groups["Parser"];
-                Group keywordFormatter = m.Groups["KeywordFormatte"];
+                Group keywordFormatter = m.Groups["KeywordFormat"];
                 Group formatter = m.Groups["Formatter"];
                 Group keyword = m.Groups["Keyword"];
 

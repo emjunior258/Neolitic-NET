@@ -86,6 +86,10 @@ namespace Neolitic
 
 
 		Object Get(String name);
+		T  Get<T>(String name);
+		Object GetOptional(String name);
+		T GetOptional<T>(String name);
+		void Set (String name, Object val);
 
     }
 }

@@ -7,15 +7,7 @@ namespace Neolitic
 {
     public interface ICommandKeywords
     {
-        string GetString(String name);
-
-        int GetInt(String name);
-
-        double GetDouble(String name);
-
-        decimal GetDecimal(String name);
-
-        bool GetBoolean(String name);
+        
 
         T Get<T>(String name);
 

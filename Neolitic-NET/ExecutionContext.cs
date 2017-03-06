@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Neolitic
 {
-    public class ExecutionContext : IExecutionContext
+	public class ExecutionContext : IExecutionContext
     {
 
 
@@ -61,6 +61,35 @@ namespace Neolitic
 			return Keywords.Get (name);
 
 		}
+
+		public T Get<T> (string name)
+		{
+			return (T) Get(name);
+		}
+		public object GetOptional (string name)
+		{
+			if (!Keywords.Contains (name))
+				return null;
+
+			return Get (name);
+
+
+		}
+		public T GetOptional<T> (string name)
+		{
+			if (!Keywords.Contains (name))
+				return default(T);
+
+			return (T)	Get (name);
+
+		}
+
+		public void Set (String name, Object val){
+
+			Keywords.Set (name, val);
+
+		}
+
 
     }
 }

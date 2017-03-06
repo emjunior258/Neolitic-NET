@@ -1,1 +1,28 @@
-﻿<Properties RefactoringSettings.EnableRefactorings="True" />
+﻿<Properties RefactoringSettings.EnableRefactorings="True">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Neolitic-Test/CredelecServicesTest.cs">
+    <Files>
+      <File FileName="Neolitic-Test/CredelecServicesTest.cs" Line="6" Column="2" />
+    </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State name="__root__">
+          <Node name="Neolitic-NET" expanded="True">
+            <Node name="Neolitic-Test" expanded="True">
+              <Node name="NeoliticTest" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/mario/Development/Emerjoin/Neolitic-NET/Neolitic-Test/App/MoneyParser.cs" line="12" column="1" />
+      <Breakpoint file="/Users/mario/Development/Emerjoin/Neolitic-NET/Neolitic-Test/App/EDMCredelec.cs" line="15" column="1" />
+      <Breakpoint file="/Users/mario/Development/Emerjoin/Neolitic-NET/Neolitic-NET/KeywordToken.cs" line="84" column="1" />
+      <Breakpoint file="/Users/mario/Development/Emerjoin/Neolitic-NET/Neolitic-NET/CommandKeywords.cs" line="68" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

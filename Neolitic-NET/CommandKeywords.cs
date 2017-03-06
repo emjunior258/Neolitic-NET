@@ -13,31 +13,6 @@ namespace Neolitic
 		private IExecutionContext _context = null;
 
 
-		public string GetString (string name)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public int GetInt (string name)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public double GetDouble (string name)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public decimal GetDecimal (string name)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public bool GetBoolean (string name)
-		{
-			throw new NotImplementedException ();
-		}
-
 		public T Get<T> (string name)
 		{
 			throw new NotImplementedException ();
@@ -110,26 +85,14 @@ namespace Neolitic
 		{
 			String result = target;
 
-			foreach (String name in _values.Keys) {
-
-				KeywordToken token = null;
-
-				if (_tokens.ContainsKey (name)) {
-					
-					_tokens.TryGetValue (name, out token);
-
-				} else {
-
-					token = new KeywordToken ();
-					token.Name = name;
-
-				}
+			IList<KeywordToken> tokens = KeywordToken.Scan (result);
+			foreach (KeywordToken token in tokens) {
 
 				token.Container = _context.Container;
 				result = token.ApplyValue (this, result);
-					
-			}
 
+			}
+				
 			return result;
 			
 		}

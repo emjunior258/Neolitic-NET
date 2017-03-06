@@ -10,17 +10,37 @@ namespace NeoliticTest
 	{
 
 		[Service("EDM","{meter} {amount:money} {@pin}")]
-		public void BuyRecharge(){
+		public void BuyVoucher(){
 
-			String meter = (String) Command.Get ("meter");
-			decimal amount = (decimal)Command.Get ("amount");
+			String meter = Command.Get<String> ("meter");
+			decimal amount = Command.Get<Decimal> ("amount");
 
 			if (amount < 1)
 				Command.Fail ("222");//Invalid recharge amount
 
 
 			//The voucher bought by the client
-			Command.Keywords.Set ("voucher", "1103200238902145");
+			Command.Set ("voucher", "1103200238902145");
+
+		}
+
+
+
+		[Service("EDMA","{meter?} {@pin}")]
+		public void GetLastVoucherAmount(){
+
+			String meter = Command.GetOptional<String> ("meter");
+			if (meter != null) {
+
+				//Get last voucher for specific meter
+				Command.Set ("amount", "2500");
+
+			} else {
+
+				//Get the last voucher
+				Command.Set ("amount", "4500");
+
+			}
 
 		}
 

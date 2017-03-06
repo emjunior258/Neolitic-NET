@@ -41,6 +41,7 @@
     <Compile Include="App\ContextFactory.cs" />
     <Compile Include="App\ErrorResolver.cs" />
     <Compile Include="CredelecServicesTest.cs" />
+    <Compile Include="App\MoneyFormatter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
