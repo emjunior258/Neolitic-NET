@@ -7,6 +7,6 @@ namespace Neolitic
 {
     public interface IContextFactory
     {
-        IExecutionContext CreateContext(String command,ServiceInfo serviceInfo, String arguments);
+        IExecutionContext CreateContext(String command,IServiceInfo serviceInfo, String arguments);
     }
 }

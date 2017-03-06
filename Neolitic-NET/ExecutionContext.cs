@@ -36,7 +36,7 @@ namespace Neolitic
         public void Fail(string errorCode)
         {
             throw new CommandExecutionFailException(String.Format("Failing execution of {0} service with error {1}",
-                Service.Name, errorCode), errorCode);
+                Service.Id, errorCode), errorCode);
         }
     
         public void OnExecutionEnd()
@@ -91,5 +91,11 @@ namespace Neolitic
 		}
 
 
+		public void Exit (string status)
+		{
+			throw new CommandExitException (status);
+		}
+
+		public string ExitStatus { get; set; }
     }
 }

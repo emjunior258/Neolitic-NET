@@ -67,6 +67,9 @@
     <Compile Include="ICapturer.cs" />
     <Compile Include="Attributes\Captures.cs" />
     <Compile Include="Abstracts\BaseCapturer.cs" />
+    <Compile Include="UnrecognizedServiceException.cs" />
+    <Compile Include="CommandExitException.cs" />
+    <Compile Include="IServiceInfo.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,20 +5,36 @@ using System.Text;
 
 namespace Neolitic
 {
-    public class ServiceInfo
+    public class ServiceInfo : IServiceInfo
     {
 
-		private String _name = null;
+		private IDictionary<String,String> _statusMessages = new Dictionary<String,String> ();
+		private String _id = null;
 
-        public ServiceInfo(String code)
+        public ServiceInfo(String serviceId)
         {
-            this._name  = code;
+            this._id  = serviceId;
         }
 
-        public String Name { get { return _name; } }
+        public String Id { get { return _id; } }
 
         public String SuccessMessage { get; set; }
 
         public String Description { get; set; }
+
+		public void AddStatusMessage(String status, String message){
+
+			_statusMessages.Add (status, message);
+
+		}
+
+		public String GetStatusMessage(String status){
+
+			String statusMessage = null;
+			_statusMessages.TryGetValue(status, out statusMessage);
+			return statusMessage;
+
+		}
+
     }
 }

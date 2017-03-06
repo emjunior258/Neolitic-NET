@@ -16,5 +16,11 @@ namespace Neolitic
         {
             this._command = cmd;
         }
+
+		public ContainerException(String message, String cmd)
+			:base(message)
+		{
+			this._command = cmd;
+		}
     }
 }

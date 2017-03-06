@@ -11,7 +11,7 @@ namespace Neolitic.Attributes
 
 		private String _commandMapping = null;
 
-		public Service(string name,String mapping) : base(name)
+		public Service(string id,String mapping) : base(id)
         {
 			this._commandMapping = mapping;
 		}

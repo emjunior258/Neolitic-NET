@@ -37,11 +37,12 @@
     <Compile Include="App\EDMCredelec.cs" />
     <Compile Include="App\PinCapturer.cs" />
     <Compile Include="App\MoneyParser.cs" />
-    <Compile Include="App\ServiceIdentifier.cs" />
     <Compile Include="App\ContextFactory.cs" />
     <Compile Include="App\ErrorResolver.cs" />
     <Compile Include="CredelecServicesTest.cs" />
     <Compile Include="App\MoneyFormatter.cs" />
+    <Compile Include="App\EDMServiceIdentifier.cs" />
+    <Compile Include="App\Tracking\TrackingServiceIdentifier.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -49,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\" />
+    <Folder Include="App\Tracking\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Neolitic-NET\Neolitic-NET.csproj">

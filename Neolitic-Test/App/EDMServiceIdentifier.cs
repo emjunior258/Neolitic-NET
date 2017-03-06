@@ -3,7 +3,7 @@ using Neolitic;
 
 namespace NeoliticTest
 {
-	public class ServiceIdentifier : IServiceIdentifier
+	public class EDMServiceIdentifier : IServiceIdentifier
 	{
 		
 		public ServiceInfo IdentifyService (string command, out string arguments)

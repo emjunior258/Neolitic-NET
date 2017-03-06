@@ -7,7 +7,7 @@ namespace Neolitic
 {
     public interface IServiceIdentifier
     {
-        ServiceInfo IdentifyService(String command, out String arguments);
+        IServiceInfo IdentifyService(String command, out String arguments);
 
     }
 }

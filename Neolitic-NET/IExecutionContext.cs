@@ -23,7 +23,7 @@ namespace Neolitic
         /// <summary>
         /// <see cref="ServiceInfo"/> instance regarding the current command in execution
         /// </summary>
-        ServiceInfo Service { get; set; }
+        IServiceInfo Service { get; set; }
 
         /// <summary>
         /// Tells if the active command execution failed or succeeded. 
@@ -90,6 +90,9 @@ namespace Neolitic
 		Object GetOptional(String name);
 		T GetOptional<T>(String name);
 		void Set (String name, Object val);
+
+		String ExitStatus { get; set; }
+		void Exit (String status);
 
     }
 }

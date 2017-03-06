@@ -161,16 +161,27 @@ namespace Neolitic
         }
 
 
-		private void HandleCapturables(IList<KeywordToken> tokens, IExecutionContext context){
+		private bool HandleCapturables(IList<KeywordToken> tokens, IExecutionContext context){
 
-			foreach (KeywordToken token in tokens) {
+			try{
 
-				if (!token.Capturable)
-					continue;
+				foreach (KeywordToken token in tokens) {
 
-				Object value = token.GetValue (context.Keywords);
-				FireCapturers (token.Name, value);
+					if (!token.Capturable)
+						continue;
 
+					Object value = token.GetValue (context.Keywords);
+					FireCapturers (token.Name, value);
+
+				}
+
+				return true;
+
+			}catch(Exception ex){
+
+				HandleException(ex,context);
+				return false;
+					
 			}
 
 		}
@@ -231,7 +242,6 @@ namespace Neolitic
 
 				}catch(Exception ex)
 				{
-					context.FailureCause = ex;
 					HandleException(ex, context);
 				}
 			}
@@ -243,7 +253,6 @@ namespace Neolitic
 
 			}catch(Exception ex)
 			{
-				context.FailureCause = ex;
 				HandleException(ex, context);
 			}
 		}
@@ -253,7 +262,7 @@ namespace Neolitic
             try
             {
                 String arguments = null;
-                ServiceInfo info = _serviceIdentifier.IdentifyService(command, out arguments);
+                IServiceInfo info = _serviceIdentifier.IdentifyService(command, out arguments);
                 IExecutionContext context = _contextFactory.CreateContext(command, info, arguments);
                 context.Service = info;
                 context.Arguments = arguments;
@@ -261,10 +270,10 @@ namespace Neolitic
 
                 MethodInfo serviceMethodInfo = null;
 				Object invocationTarget = null;
-				serviceMethodInfo = GetServiceMethodInfo(info.Name, out invocationTarget);
+				serviceMethodInfo = GetServiceMethodInfo(info.Id, out invocationTarget);
 
 				IList<KeywordToken> tokens = null;
-				_serviceTokens.TryGetValue(info.Name, out tokens);
+				_serviceTokens.TryGetValue(info.Id, out tokens);
 
 				//Initialize context for current Thread
 				BaseContextualized.Initialize(context);
@@ -277,14 +286,20 @@ namespace Neolitic
 				//Put the argument values in the context
 				context.Keywords.InitializeTokens(context);
 
-				//Call capturers
-				HandleCapturables(tokens,context);
+				//Call Capturers
+				if(HandleCapturables(tokens,context)){
+
+					ExecuteService(context,serviceMethodInfo,invocationTarget);
+
+				}
 			
-				ExecuteService(context,serviceMethodInfo,invocationTarget);
 				return GetResult(info,context);
 
-            }
-            catch (Exception ex)
+			}catch(ContainerException ex){
+
+				throw ex;
+
+			}catch (Exception ex)
             {
                 throw new ContainerException("An Unexpected Exception was thrown during the command execution", ex,command);
 			
@@ -295,7 +310,7 @@ namespace Neolitic
 			}
         }
 
-		private ExecutionResult GetResult(ServiceInfo info, IExecutionContext context){
+		private ExecutionResult GetResult(IServiceInfo info, IExecutionContext context){
 
 			String message = "";
 
@@ -340,7 +355,9 @@ namespace Neolitic
                 context.ErrorCode = CommandExecutionException.DEFAULT_ERROR_CODE;
                 context.ExecutionFailed = true;
 
-            }    
+            }  
+
+			context.FailureCause = e;
 
         }
 
