@@ -36,5 +36,7 @@ namespace Neolitic
 
 		}
 
+		public String ArgumentsMapping { get; set; }
+
     }
 }

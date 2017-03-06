@@ -6,7 +6,7 @@ namespace NeoliticTest
 	public class EDMServiceIdentifier : IServiceIdentifier
 	{
 		
-		public ServiceInfo IdentifyService (string command, out string arguments)
+		public IServiceInfo IdentifyService (string command, out string arguments)
 		{
 			if(command.StartsWith("BIM EDM ")){
 
@@ -15,6 +15,7 @@ namespace NeoliticTest
 
 				ServiceInfo info = new ServiceInfo ("EDM");
 				info.SuccessMessage = "Your voucher code is {voucher}";
+				info.ArgumentsMapping = "{meter} {amount:money} {@pin}";
 				return info;
 
 			}else if(command.StartsWith("BIM EDMA ")){
@@ -24,6 +25,7 @@ namespace NeoliticTest
 
 				ServiceInfo info = new ServiceInfo ("EDMA");
 				info.SuccessMessage = "The Last recharge amount is {amount|money}";
+				info.ArgumentsMapping = "{meter?} {@pin}";
 				return info;
 
 			}

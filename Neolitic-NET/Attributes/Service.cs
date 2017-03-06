@@ -9,14 +9,11 @@ namespace Neolitic.Attributes
     public class Service : Named
     {
 
-		private String _commandMapping = null;
 
-		public Service(string id,String mapping) : base(id)
+		public Service(string id) : base(id)
         {
-			this._commandMapping = mapping;
+			
 		}
-
-		public String CommandMapping {get { return _commandMapping; }}
 
     }
 }

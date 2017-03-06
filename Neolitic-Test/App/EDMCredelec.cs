@@ -9,7 +9,7 @@ namespace NeoliticTest
 	public class EDMCredelec : BaseContextualized
 	{
 
-		[Service("EDM","{meter} {amount:money} {@pin}")]
+		[Service("EDM")]
 		public void BuyVoucher(){
 
 			String meter = Command.Get<String> ("meter");
@@ -26,7 +26,7 @@ namespace NeoliticTest
 
 
 
-		[Service("EDMA","{meter?} {@pin}")]
+		[Service("EDMA")]
 		public void GetLastVoucherAmount(){
 
 			String meter = Command.GetOptional<String> ("meter");

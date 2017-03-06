@@ -12,6 +12,8 @@ namespace Neolitic
 		String Description { get; }
 
 		String GetStatusMessage(String status);
+
+		String ArgumentsMapping { get; }
 		
 	}
 }

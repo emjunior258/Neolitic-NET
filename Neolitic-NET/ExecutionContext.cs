@@ -27,7 +27,7 @@ namespace Neolitic
             }
         }
 
-        public ServiceInfo Service { get; set; }
+        public IServiceInfo Service { get; set; }
 
 		public string ErrorCode { get; set; }
 

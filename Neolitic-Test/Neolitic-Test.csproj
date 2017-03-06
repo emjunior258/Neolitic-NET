@@ -43,6 +43,7 @@
     <Compile Include="App\MoneyFormatter.cs" />
     <Compile Include="App\EDMServiceIdentifier.cs" />
     <Compile Include="App\Tracking\TrackingServiceIdentifier.cs" />
+    <Compile Include="App\Tracking\TrackingService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

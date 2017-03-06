@@ -87,8 +87,6 @@ namespace Neolitic
 					if(attribute is Service){
 
 						Service service = (Service)attribute;
-						IList<KeywordToken> tokens = KeywordToken.Scan (service.CommandMapping);
-						_serviceTokens.Add (service.Name, tokens);
 
 						MappedService mapped = new MappedService();
 						mapped.Source = servicesHolder;
@@ -257,23 +255,23 @@ namespace Neolitic
 			}
 		}
 
+
         public ExecutionResult ExecuteCommand(string command)
         {
             try
             {
                 String arguments = null;
-                IServiceInfo info = _serviceIdentifier.IdentifyService(command, out arguments);
-                IExecutionContext context = _contextFactory.CreateContext(command, info, arguments);
-                context.Service = info;
+				IServiceInfo serviceInfo = _serviceIdentifier.IdentifyService(command, out arguments);
+                IExecutionContext context = _contextFactory.CreateContext(command, serviceInfo, arguments);
+                context.Service = serviceInfo;
                 context.Arguments = arguments;
 				context.Container = this;
 
                 MethodInfo serviceMethodInfo = null;
 				Object invocationTarget = null;
-				serviceMethodInfo = GetServiceMethodInfo(info.Id, out invocationTarget);
+				serviceMethodInfo = GetServiceMethodInfo(serviceInfo.Id, out invocationTarget);
 
-				IList<KeywordToken> tokens = null;
-				_serviceTokens.TryGetValue(info.Id, out tokens);
+				IList<KeywordToken> tokens = KeywordToken.Scan (serviceInfo.ArgumentsMapping);
 
 				//Initialize context for current Thread
 				BaseContextualized.Initialize(context);
@@ -293,7 +291,7 @@ namespace Neolitic
 
 				}
 			
-				return GetResult(info,context);
+				return GetResult(serviceInfo,context);
 
 			}catch(ContainerException ex){
 
