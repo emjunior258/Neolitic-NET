@@ -59,7 +59,7 @@ It will automatically fetch the parameters using the names you have given them i
 a Key-Value variable that will be accessible to the service method.
 __The values will already be there for you.__
 
-You will be able to retrive them simply by doint this:
+You will be able to retrieve them simply by doint this:
 
 ```c#
 ...
@@ -97,9 +97,9 @@ store in the Key-Values variable.
 Parsers are define per argument. Let us show you an example:
 
 ```pre
-//The "accountNumber" argument will be parsed using a built-in parser named "pint32"
 {accountNumber:pint32} {pinCode}
 ```
+The "accountNumber" argument will be parsed using a built-in parser named "pint32"
 
 After doing this, you can safelly cast the *accountNumber* value
 
@@ -156,9 +156,9 @@ If we want the __pinCode__ argument present in the check balance command to be c
 prepend a "@" caracter:
 
 ```pre
-//Every argument preceded by the "@" character, will be captured
 {accountNumber:pint32} {@pinCode}
 ```
+Every argument preceded by the "@" character, will be captured
 
 
 ## Error Messages resolution
