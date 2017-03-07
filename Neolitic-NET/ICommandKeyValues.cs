@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Neolitic
 {
-    public interface ICommandKeywords
+    public interface ICommandKeyValues
     {
         
 

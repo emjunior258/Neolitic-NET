@@ -36,7 +36,7 @@ namespace NeoliticTest
 			ServiceInfo disableEngine = new ServiceInfo("DISABLE_ENGINE");
 			disableEngine.Description = "Disable Vehicle's Engine service";
 			disableEngine.SuccessMessage = "Engine was successfully disabled for vehicle {vehicle}";
-			disableEngine.AddStatusMessage (TrackingService.STATUS_ENGINE_ALREADY_DISABLED, "Engine of vehicle {vehicle} is already disabled");
+			disableEngine.AddStatusMessage (TrackingService.ENGINE_ALREADY_DISABLED, "Engine of vehicle {vehicle} is already disabled");
 			disableEngine.ArgumentsMapping = "{vehicle} {duration?} {@authToken}";
 			EnableService(disableEngine);
 
@@ -45,7 +45,7 @@ namespace NeoliticTest
 			ServiceInfo activateAlarm = new ServiceInfo("ACTIVATE_ALARM");
 			activateAlarm.Description = "Activates vehicle's alarm";
 			activateAlarm.SuccessMessage = "Alarm successfully activated for vehicle {vehicle}";
-			activateAlarm.AddStatusMessage (TrackingService.STATUS_ALARM_ALREADY_ACTIVE, "Alarm of vehicle {vehcile} is already active");
+			activateAlarm.AddStatusMessage (TrackingService.ALARM_ALREADY_ACTIVE, "Alarm of vehicle {vehcile} is already active");
 			disableEngine.ArgumentsMapping = "{vehicle} {noiseLevel?} {@authToken}";
 			EnableService (activateAlarm);
 

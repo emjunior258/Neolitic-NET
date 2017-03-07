@@ -11,19 +11,19 @@ namespace Neolitic
 
 		public ExecutionContext(){
 
-			this._keywords = new CommandKeywords ();
+			this._keyvalues = new CommandKeyValues ();
 
 		}
 
-        private ICommandKeywords _keywords = new CommandKeywords();
+        private ICommandKeyValues _keyvalues = new CommandKeyValues();
 
 		public bool ExecutionFailed { get; set; }
 
-        public ICommandKeywords Keywords
+        public ICommandKeyValues KeyValues
         {
             get {
 
-                return _keywords;
+                return _keyvalues;
             }
         }
 
@@ -58,7 +58,7 @@ namespace Neolitic
 
 		public Object Get(String name){
 
-			return Keywords.Get (name);
+			return KeyValues.Get (name);
 
 		}
 
@@ -68,7 +68,7 @@ namespace Neolitic
 		}
 		public object GetOptional (string name)
 		{
-			if (!Keywords.Contains (name))
+			if (!KeyValues.Contains (name))
 				return null;
 
 			return Get (name);
@@ -77,7 +77,7 @@ namespace Neolitic
 		}
 		public T GetOptional<T> (string name)
 		{
-			if (!Keywords.Contains (name))
+			if (!KeyValues.Contains (name))
 				return default(T);
 
 			return (T)	Get (name);
@@ -86,7 +86,7 @@ namespace Neolitic
 
 		public void Set (String name, Object val){
 
-			Keywords.Set (name, val);
+			KeyValues.Set (name, val);
 
 		}
 

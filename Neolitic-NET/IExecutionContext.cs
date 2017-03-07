@@ -45,7 +45,7 @@ namespace Neolitic
         /// <summary>
         /// Gets the ICommandKeywords instance for the current command in execution 
         /// </summary>
-        ICommandKeywords Keywords { get; }
+        ICommandKeyValues KeyValues { get; }
 
 
         /// <summary>

@@ -34,16 +34,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App\EDMCredelec.cs" />
-    <Compile Include="App\PinCapturer.cs" />
-    <Compile Include="App\MoneyParser.cs" />
-    <Compile Include="App\ContextFactory.cs" />
-    <Compile Include="App\ErrorResolver.cs" />
     <Compile Include="CredelecServicesTest.cs" />
-    <Compile Include="App\MoneyFormatter.cs" />
-    <Compile Include="App\EDMServiceIdentifier.cs" />
     <Compile Include="App\Tracking\TrackingServiceIdentifier.cs" />
     <Compile Include="App\Tracking\TrackingService.cs" />
+    <Compile Include="App\EDM\ContextFactory.cs" />
+    <Compile Include="App\EDM\EDMCredelec.cs" />
+    <Compile Include="App\EDM\EDMServiceIdentifier.cs" />
+    <Compile Include="App\EDM\ErrorResolver.cs" />
+    <Compile Include="App\EDM\MoneyFormatter.cs" />
+    <Compile Include="App\EDM\MoneyParser.cs" />
+    <Compile Include="App\EDM\PinCapturer.cs" />
+    <Compile Include="App\Tracking\AuthTokenCapturer.cs" />
+    <Compile Include="App\Tracking\TrackingContextFactory.cs" />
+    <Compile Include="TrackingServicesTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -52,6 +55,7 @@
   <ItemGroup>
     <Folder Include="App\" />
     <Folder Include="App\Tracking\" />
+    <Folder Include="App\EDM\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Neolitic-NET\Neolitic-NET.csproj">

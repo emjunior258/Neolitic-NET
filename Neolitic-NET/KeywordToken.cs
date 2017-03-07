@@ -38,7 +38,7 @@ namespace Neolitic
         /// </summary>
         /// <param name="keywords">the <see cref="ICommandKeywords"/> from which the value must be extracted.</param>
         /// <returns>the extracted and formatted value (if a formatter is set) if found in the <see cref="ICommandKeywords"/> or null if not found</returns>
-        public String FormatValue(ICommandKeywords keywords)
+        public String FormatValue(ICommandKeyValues keywords)
         {
             if (!keywords.ContainsValue(Name))
                 return null;
@@ -59,7 +59,7 @@ namespace Neolitic
         /// </summary>
         /// <param name="keywords">the <see cref="ICommandKeywords"/> from which the value must be extracted.</param>
         /// <param name="target">the string to apply the extracted value on</param>
-        public String ApplyValue(ICommandKeywords keywords, String target)
+        public String ApplyValue(ICommandKeyValues keywords, String target)
         {
             String formatted = FormatValue(keywords);
             target = target.ToString();
@@ -79,7 +79,7 @@ namespace Neolitic
         /// </summary>
         /// <param name="keywords">the <see cref="ICommandKeywords"/> from which the value must be extracted.</param>
         /// <returns></returns>
-        public Object GetValue(ICommandKeywords keywords)
+        public Object GetValue(ICommandKeyValues keywords)
         {
             if (!keywords.ContainsValue(Name))
                 return null;
@@ -99,7 +99,7 @@ namespace Neolitic
 
 			this.Container = context.Container;
 			String argValue = context.Arguments.Split(' ')[ArgumentIndex];
-			context.Keywords.Set (Name, argValue);
+			context.KeyValues.Set (Name, argValue);
 
 
 		}

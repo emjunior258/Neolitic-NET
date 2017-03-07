@@ -170,7 +170,7 @@ namespace Neolitic
 					if (!token.Capturable)
 						continue;
 
-					Object value = token.GetValue (context.Keywords);
+					Object value = token.GetValue (context.KeyValues);
 					FireCapturers (token.Name, value);
 
 				}
@@ -282,11 +282,11 @@ namespace Neolitic
 
 				foreach(KeywordToken token in tokens){
 					token.Container = this;
-					context.Keywords.Set(token);
+					context.KeyValues.Set(token);
 				}
 
 				//Put the argument values in the context
-				context.Keywords.InitializeTokens(context);
+				context.KeyValues.InitializeTokens(context);
 
 				//This variable will if the service method invokes IExecutionContext.Exit
 				String exitMessage = null;
@@ -323,7 +323,7 @@ namespace Neolitic
 
 				if (context.ExecutionFailed) {
 					message = _errMessageResolver.Resolve (context.ErrorCode);
-					context.Keywords.Set ("error", context.ErrorCode);
+					context.KeyValues.Set ("error", context.ErrorCode);
 				} else
 					message = info.SuccessMessage;
 
@@ -331,7 +331,7 @@ namespace Neolitic
 				message = exitMessage;
 
 
-			message = context.Keywords.Apply(message);
+			message = context.KeyValues.Apply(message);
 			ExecutionResult result = new ExecutionResult(context,message);
 			return result;
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Neolitic
 {
-	public class CommandKeywords : ICommandKeywords
+	public class CommandKeyValues : ICommandKeyValues
     {
 
 		private IDictionary<String,KeywordToken> _tokens = new Dictionary<String,KeywordToken> ();

@@ -49,11 +49,9 @@
     <Compile Include="CommandServiceException.cs" />
     <Compile Include="ContainerException.cs" />
     <Compile Include="ExecutionResult.cs" />
-    <Compile Include="ICommandKeywords.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="IErrorMessagesResolver.cs" />
     <Compile Include="IContextFactory.cs" />
-    <Compile Include="CommandKeywords.cs" />
     <Compile Include="Container.cs" />
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="IServiceIdentifier.cs" />
@@ -73,6 +71,8 @@
     <Compile Include="MessageNotMappedException.cs" />
     <Compile Include="FailedToFetchMappedMessageException.cs" />
     <Compile Include="AutoCommandExecutionFailException.cs" />
+    <Compile Include="ICommandKeyValues.cs" />
+    <Compile Include="CommandKeyValues.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
