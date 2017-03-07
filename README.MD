@@ -152,8 +152,8 @@ Lets solve the pin validation problem with a Capturer:
 
 ```
 
-If we want the __pinCode__ argument present in the check balance command to be captured, we must
-prepend a "@" caracter:
+If we want the __pinCode__ argument passed to the balance check command to be captured, we must
+prepend a "@" caracter.
 
 ```pre
 {accountNumber:pint32} {@pinCode}
