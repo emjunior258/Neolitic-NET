@@ -128,7 +128,7 @@ Lets solve the pin validation problem with a Capturer:
 
 ...
 
-[Captures("pinCode")]
+	[Captures("pinCode")]
 	public class BankingPinCapturer : BaseCapturer
 	{
 
