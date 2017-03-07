@@ -7,6 +7,6 @@ namespace Neolitic.Abstracts
 {
     public abstract class BaseValueFormatter : BaseContextualized, IValueFormatter
     {
-        public abstract string Format(string value);
+        public abstract string Format(Object value);
     }
 }

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Neolitic
 {
-    public class KeywordToken
+    public class KeyValueToken
     {
         public bool Capturable { get; set; }
 
@@ -47,7 +47,10 @@ namespace Neolitic
             if (Formatter != null)
                 value = callFormatter(value, Container);
 
-            return value.ToString();
+			if(value!=null)
+            	return value.ToString();
+			
+			return "";
 
         }
 
@@ -105,16 +108,16 @@ namespace Neolitic
 		}
 
 
-        public static List<KeywordToken> Scan(String template)
+        public static List<KeyValueToken> Scan(String template)
         {        
             Regex regex = new Regex(MATCH_TOKENS_EXPRESSION,RegexOptions.IgnoreCase);
             MatchCollection matchCollection = regex.Matches(template);
-            List<KeywordToken> tokens = new List<KeywordToken>();
+            List<KeyValueToken> tokens = new List<KeyValueToken>();
 
             int scanIndex = 0;
             foreach(Match m in matchCollection)
             {
-                KeywordToken token = new KeywordToken();
+                KeyValueToken token = new KeyValueToken();
                 token.ArgumentIndex = scanIndex;
                 token.TokenText = m.Value;
 
@@ -168,7 +171,7 @@ namespace Neolitic
 
 		}
 
-        private static void CheckCapturability(KeywordToken token)
+        private static void CheckCapturability(KeyValueToken token)
         {
             //Token name must have the @ marker to be automatically-interpretable
             if (!token.Name.StartsWith("@"))
@@ -180,7 +183,7 @@ namespace Neolitic
             
         }
 
-		private static void CheckNullability(KeywordToken token){
+		private static void CheckNullability(KeyValueToken token){
 
 			if(!token.Name.EndsWith("?"))
 				return;
@@ -207,7 +210,7 @@ namespace Neolitic
             if (formatter == null)
                 return null;
 
-            return formatter.Format(value.ToString());
+            return formatter.Format(value);
         }
 
 

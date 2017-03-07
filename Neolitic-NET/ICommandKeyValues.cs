@@ -13,7 +13,7 @@ namespace Neolitic
 
         void Set(String name, Object value);
 
-		void Set (KeywordToken token);
+		void Set (KeyValueToken token);
 
 		void InitializeTokens (IExecutionContext context);
 

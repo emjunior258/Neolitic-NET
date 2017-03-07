@@ -8,7 +8,7 @@ namespace Neolitic
 	public class CommandKeyValues : ICommandKeyValues
     {
 
-		private IDictionary<String,KeywordToken> _tokens = new Dictionary<String,KeywordToken> ();
+		private IDictionary<String,KeyValueToken> _tokens = new Dictionary<String,KeyValueToken> ();
 		private IDictionary<String,Object> _values = new Dictionary<String,Object> ();
 		private IExecutionContext _context = null;
 
@@ -23,7 +23,7 @@ namespace Neolitic
 			_values.Add (name, value);
 		}
 
-		public void Set (KeywordToken token)
+		public void Set (KeyValueToken token)
 		{
 			_tokens.Add (token.Name, token);
 		}
@@ -31,7 +31,7 @@ namespace Neolitic
 		public void InitializeTokens (IExecutionContext context)
 		{
 			_context = context;
-			foreach (KeywordToken token in _tokens.Values)
+			foreach (KeyValueToken token in _tokens.Values)
 				token.Initialize(context);
 
 			
@@ -42,7 +42,7 @@ namespace Neolitic
 
 			if (_tokens.ContainsKey (name)) {
 
-				KeywordToken token = null;
+				KeyValueToken token = null;
 				_tokens.TryGetValue (name, out token);
 				token.Container = _context.Container;
 				value = token.GetValue (this);
@@ -85,8 +85,8 @@ namespace Neolitic
 		{
 			String result = target;
 
-			IList<KeywordToken> tokens = KeywordToken.Scan (result);
-			foreach (KeywordToken token in tokens) {
+			IList<KeyValueToken> tokens = KeyValueToken.Scan (result);
+			foreach (KeyValueToken token in tokens) {
 
 				token.Container = _context.Container;
 				result = token.ApplyValue (this, result);

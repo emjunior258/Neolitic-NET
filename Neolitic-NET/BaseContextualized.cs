@@ -22,10 +22,16 @@ namespace Neolitic
 
 		}
 
-        public IExecutionContext Command {
+        public IExecutionContext Context {
             protected set { _contextLocal.Value = value;  }
             get { return _contextLocal.Value; }
         }
+
+		public T GetContext<T>(){
+
+			return (T)Context; 
+
+		}
         
     }
 }

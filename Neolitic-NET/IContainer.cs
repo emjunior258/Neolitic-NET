@@ -20,6 +20,8 @@ namespace Neolitic
 
         ExecutionResult ExecuteCommand(String command);
 
+		ExecutionResult ExecuteCommand(String command, Object contextCreationParam);
+
         IValueFormatter GetFormatter(String name);
 
         IValueParser GetParser(String name);

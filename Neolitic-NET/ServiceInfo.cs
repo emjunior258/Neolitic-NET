@@ -22,7 +22,7 @@ namespace Neolitic
 
         public String Description { get; set; }
 
-		public void AddStatusMessage(String status, String message){
+		public void SetStatusMessage(String status, String message){
 
 			_statusMessages.Add (status, message);
 

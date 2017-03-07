@@ -44,6 +44,17 @@ namespace Neolitic
 		}
 
 
+		public Container(){
+
+			this.AddParser (new BooleanParser ());
+			this.AddParser (new DecimalParser ());
+			this.AddParser (new DoubleParser ());
+			this.AddParser (new Int16Parser ());
+			this.AddParser (new Int32Parser ());
+			this.AddParser (new Int64Parser ());
+
+		}
+
 
 		public IValueFormatter GetFormatter (string name)
 		{
@@ -70,7 +81,6 @@ namespace Neolitic
         private IDictionary<String,IValueFormatter> _formatters = new Dictionary<string, IValueFormatter>();
         private IDictionary<String,IValueParser> _parsers = new Dictionary<String,IValueParser>();
 		private IDictionary<String,IList<CapturerInfo>> _capturers = new Dictionary<String, IList<CapturerInfo>>();
-		private IDictionary<String,IList<KeywordToken>> _serviceTokens = new Dictionary<String,IList<KeywordToken>> ();
 
         public void MapServices(Object servicesHolder)
         {
@@ -159,13 +169,13 @@ namespace Neolitic
         }
 
 
-		private bool HandleCapturables(IList<KeywordToken> tokens, IExecutionContext context,out String exitMessage){
+		private bool HandleCapturables(IList<KeyValueToken> tokens, IExecutionContext context,out String exitMessage){
 
 			exitMessage = null;
 
 			try{
 
-				foreach (KeywordToken token in tokens) {
+				foreach (KeyValueToken token in tokens) {
 
 					if (!token.Capturable)
 						continue;
@@ -244,7 +254,7 @@ namespace Neolitic
 
 				}catch(Exception ex)
 				{
-					HandleException(ex, context, out resultMessage);
+					HandleException(ex.InnerException, context, out resultMessage);
 				}
 			}
 
@@ -259,14 +269,17 @@ namespace Neolitic
 			}
 		}
 
+		public ExecutionResult ExecuteCommand(string command){
+			return ExecuteCommand (command, null);
+		}
 
-        public ExecutionResult ExecuteCommand(string command)
+		public ExecutionResult ExecuteCommand(string command, Object contextCreationParam)
         {
             try
             {
                 String arguments = null;
 				IServiceInfo serviceInfo = _serviceIdentifier.IdentifyService(command, out arguments);
-                IExecutionContext context = _contextFactory.CreateContext(command, serviceInfo, arguments);
+				IExecutionContext context = _contextFactory.CreateContext(serviceInfo, contextCreationParam);
                 context.Service = serviceInfo;
                 context.Arguments = arguments;
 				context.Container = this;
@@ -275,12 +288,14 @@ namespace Neolitic
 				Object invocationTarget = null;
 				serviceMethodInfo = GetServiceMethodInfo(serviceInfo.Id, out invocationTarget);
 
-				IList<KeywordToken> tokens = KeywordToken.Scan (serviceInfo.ArgumentsMapping);
+				//TODO: Throw MissingServiceMethodException
+
+				IList<KeyValueToken> tokens = KeyValueToken.Scan (serviceInfo.ArgumentsMapping);
 
 				//Initialize context for current Thread
 				BaseContextualized.Initialize(context);
 
-				foreach(KeywordToken token in tokens){
+				foreach(KeyValueToken token in tokens){
 					token.Container = this;
 					context.KeyValues.Set(token);
 				}
@@ -392,6 +407,9 @@ namespace Neolitic
 
             }else
             {
+
+				if (e is TargetInvocationException)
+					e = e.InnerException;
 
                 //Implicit invocation of Fail method: use the default error code
                 context.ErrorCode = CommandExecutionException.DEFAULT_ERROR_CODE;

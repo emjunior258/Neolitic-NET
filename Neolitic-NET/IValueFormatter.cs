@@ -7,6 +7,6 @@ namespace Neolitic
 {
     public interface IValueFormatter
     {
-        String Format(String value);
+        String Format(Object value);
     }
 }
