@@ -5,22 +5,29 @@ Framework to build a text commands based back-end employing a high level separat
 When you are developing a back-end that receives service commands in string format and then returns response strings, you are
 suscepible to write boilerplate code and end up writing some tricky and unmaintainable code.
 
-Lets think of a banking text command interface that offers two basic services: BALANCE consults and
-Money TRANSFERS via the following text commands:
+Lets think of a banking text command interface that offers two basic services: __BALANCE checks__ and
+__Money TRANSFERS__ via the following text commands:
 
 ### Balance check command
 
 ```pre
 BAL <account_number> <pin_code>
-Expected Result_: "The balance of the account X is Y"
 ```
 
+__Expected Result__
+```pre
+"The balance of the account X is Y"
+```
 
 ### Money transfer command
 
 ```pre
 TRANSF <from_account> <amount> <to_account> <pin_code>
-Expected Result: "You have successfully transfered X from Y to Z"
+```
+
+__Expected Result__: 
+```pre
+"You have successfully transfered X from Y to Z"
 ```
 
 These two services have a few things in common:
