@@ -159,7 +159,9 @@ namespace Neolitic
         }
 
 
-		private bool HandleCapturables(IList<KeywordToken> tokens, IExecutionContext context){
+		private bool HandleCapturables(IList<KeywordToken> tokens, IExecutionContext context,out String exitMessage){
+
+			exitMessage = null;
 
 			try{
 
@@ -177,7 +179,7 @@ namespace Neolitic
 
 			}catch(Exception ex){
 
-				HandleException(ex,context);
+				HandleException(ex,context, out exitMessage);
 				return false;
 					
 			}
@@ -217,8 +219,10 @@ namespace Neolitic
         }
 
 		private void ExecuteService(IExecutionContext context, 
-			MethodInfo serviceMethodInfo, Object invocationTarget){
+			MethodInfo serviceMethodInfo, Object invocationTarget, out String resultMessage){
 			bool stopExecution = false;
+			resultMessage = null;
+
 			try
 			{
 				//Command execution start hook
@@ -227,7 +231,7 @@ namespace Neolitic
 			}
 			catch (Exception ex)
 			{
-				HandleException(ex, context);
+				HandleException(ex, context, out resultMessage);
 			}
 
 			//There is no wish to stop the command execution and the execution didn't fail earlier
@@ -240,7 +244,7 @@ namespace Neolitic
 
 				}catch(Exception ex)
 				{
-					HandleException(ex, context);
+					HandleException(ex, context, out resultMessage);
 				}
 			}
 
@@ -251,7 +255,7 @@ namespace Neolitic
 
 			}catch(Exception ex)
 			{
-				HandleException(ex, context);
+				HandleException(ex, context, out resultMessage);
 			}
 		}
 
@@ -284,14 +288,17 @@ namespace Neolitic
 				//Put the argument values in the context
 				context.Keywords.InitializeTokens(context);
 
-				//Call Capturers
-				if(HandleCapturables(tokens,context)){
+				//This variable will if the service method invokes IExecutionContext.Exit
+				String exitMessage = null;
 
-					ExecuteService(context,serviceMethodInfo,invocationTarget);
+				//Call Capturers
+				if(HandleCapturables(tokens,context,out exitMessage)){
+
+					ExecuteService(context,serviceMethodInfo,invocationTarget, out exitMessage);
 
 				}
 			
-				return GetResult(serviceInfo,context);
+				return GetResult(serviceInfo,context, exitMessage);
 
 			}catch(ContainerException ex){
 
@@ -308,16 +315,20 @@ namespace Neolitic
 			}
         }
 
-		private ExecutionResult GetResult(IServiceInfo info, IExecutionContext context){
+		private ExecutionResult GetResult(IServiceInfo info, IExecutionContext context, String exitMessage){
 
 			String message = "";
 
-			if (context.ExecutionFailed) {
-				message = _errMessageResolver.Resolve (context.ErrorCode);
-				context.Keywords.Set ("error", context.ErrorCode);
-			}
-			else
-				message = info.SuccessMessage;
+			if (exitMessage == null) {
+
+				if (context.ExecutionFailed) {
+					message = _errMessageResolver.Resolve (context.ErrorCode);
+					context.Keywords.Set ("error", context.ErrorCode);
+				} else
+					message = info.SuccessMessage;
+
+			} else
+				message = exitMessage;
 
 
 			message = context.Keywords.Apply(message);
@@ -336,15 +347,48 @@ namespace Neolitic
         }
 
 
-        private void HandleException(Exception e, IExecutionContext context)
+		private void HandleException(Exception e, IExecutionContext context, out String statusMessage)
         {
-            if (e is CommandExecutionFailException)
-            {
-                CommandExecutionFailException ex = (CommandExecutionFailException) e;
+			statusMessage = null;
 
-                //Fail method was explicitly invoked: use the error code set on exception object
-                context.ErrorCode = ex.ErrorCode;
-                context.ExecutionFailed = true;
+			if (e is CommandExecutionFailException) {
+				CommandExecutionFailException ex = (CommandExecutionFailException)e;
+
+				//Fail method was explicitly invoked: use the error code set on exception object
+				context.ErrorCode = ex.ErrorCode;
+				context.ExecutionFailed = true;
+
+
+			}else if(e is CommandExitException){
+
+				CommandExitException exitException = (CommandExitException)e;
+				context.ExitStatus = exitException.Status;
+				AutoCommandExecutionFailException autoFail = null;
+
+				try{
+
+					statusMessage =  context.Service.GetStatusMessage (exitException.Status);
+
+				}catch(Exception ex){
+
+					autoFail = new FailedToFetchMappedMessageException (exitException.Status,ex);
+
+				}
+
+				//If no message is mapped, Exit will be interpreted as a Fail and the failure cause will be set to MessageNotMappedException
+				if (statusMessage == null) {
+
+					if(autoFail==null)
+						autoFail = new MessageNotMappedException (exitException.Status);
+					
+					context.ExecutionFailed = true;
+					context.FailureCause = autoFail;
+					context.ErrorCode = autoFail.ErrorCode;
+
+				}
+
+				//Mappend message was found
+				return;
 
             }else
             {
@@ -356,6 +400,7 @@ namespace Neolitic
             }  
 
 			context.FailureCause = e;
+
 
         }
 

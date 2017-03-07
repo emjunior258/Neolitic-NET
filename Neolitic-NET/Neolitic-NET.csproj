@@ -70,6 +70,9 @@
     <Compile Include="UnrecognizedServiceException.cs" />
     <Compile Include="CommandExitException.cs" />
     <Compile Include="IServiceInfo.cs" />
+    <Compile Include="MessageNotMappedException.cs" />
+    <Compile Include="FailedToFetchMappedMessageException.cs" />
+    <Compile Include="AutoCommandExecutionFailException.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
