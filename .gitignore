@@ -5,4 +5,4 @@ Neolitic-NET/bin/*
 Neolitic-Test/bin/*
 Neolitic-Test/obj/*
 .vs/*
-.userprefs
+*.userprefs
