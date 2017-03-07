@@ -10,10 +10,10 @@ __Money TRANSFERS__ via the following text commands:
 
 ### Balance check command
 
+__Syntax__
 ```pre
 BAL <account_number> <pin_code>
 ```
-
 __Expected Result__
 ```pre
 "The balance of the account X is Y"
@@ -21,10 +21,10 @@ __Expected Result__
 
 ### Money transfer command
 
+__Syntax__
 ```pre
 TRANSF <from_account> <amount> <to_account> <pin_code>
 ```
-
 __Expected Result__: 
 ```pre
 "You have successfully transfered X from Y to Z"
