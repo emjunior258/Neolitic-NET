@@ -5,7 +5,7 @@ using Neolitic.Attributes;
 
 namespace Neolitic
 {
-	[Named("boolean")]
+	[Named("pbool")]
 	public class BooleanParser : IValueParser
 	{
 		

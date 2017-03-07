@@ -6,7 +6,7 @@ using Neolitic.Attributes;
 namespace Neolitic
 {
 
-	[Named("int16")]
+	[Named("pint16")]
 	public class Int16Parser : IValueParser
 	{
 		

@@ -57,7 +57,7 @@ namespace NeoliticTest
 
 			//The @ before "pin" means that the pin value must be captured.
 			//The : after "amount" means that the Parser with name "decimal" will be used on the amount argument
-			transfer.ArgumentsMapping = "{origin} {amount:decimal} {destination} {@pin}"; 
+			transfer.ArgumentsMapping = "{origin} {amount:pdecimal} {destination} {@pin}"; 
 
 			//The | after "amount" means that the amout value must be formatted using the a formatter named "money"
 			transfer.SuccessMessage = "You have successfully transfered {amount|money} to {destination}";

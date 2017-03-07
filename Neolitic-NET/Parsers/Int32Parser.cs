@@ -5,7 +5,7 @@ using Neolitic.Attributes;
 
 namespace Neolitic
 {
-	[Named("int32")]
+	[Named("pint32")]
 	public class Int32Parser : IValueParser
 	{
 

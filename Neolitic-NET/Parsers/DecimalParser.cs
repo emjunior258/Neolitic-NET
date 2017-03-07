@@ -5,7 +5,7 @@ using Neolitic.Attributes;
 
 namespace Neolitic
 {
-	[Named("decimal")]
+	[Named("pdecimal")]
 	public class DecimalParser : IValueParser
 	{
 		

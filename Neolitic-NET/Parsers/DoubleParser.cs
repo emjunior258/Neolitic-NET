@@ -5,7 +5,7 @@ using Neolitic.Attributes;
 
 namespace Neolitic
 {
-	[Named("double")]
+	[Named("pdouble")]
 	public class DoubleParser : IValueParser
 	{
 		
