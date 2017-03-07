@@ -8,11 +8,19 @@ suscepible to write boilerplate code and end up writing some tricky and unmainta
 Lets think of a banking text command interface that offers two basic services: BALANCE consults and
 Money TRANSFERS via the following text commands:
 
-1. BAL <account_number> <pin_code>
-a) Success Result: "The balance of the account X is Y";
+1. Balance check command
 
-2. TRANSF <from_account> <amount> <to_account> <pin_code>;
-a) Success Result: "You have successfully transfered X from Y to Z";
+```pre
+BAL <account_number> <pin_code>
+```
+__Success Result__: "The balance of the account X is Y";
+
+2. Money transfer
+
+```pre
+TRANSF <from_account> <amount> <to_account> <pin_code>;
+```
+__Success Result__: "You have successfully transfered X from Y to Z";
 
 These two services have a few things in common:
 * They both receive arguments and need to access them in order to proceed.
@@ -28,7 +36,7 @@ parserd.
 
 The arguments mapping for the Balances services would be the following:
 
-```json
+```pre
 {accountNumber} {pinCode}
 ```
 The advatange of mapping the arguments is that, when we ask the Neolitic Container to execute a balance command
