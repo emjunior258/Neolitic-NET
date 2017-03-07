@@ -8,19 +8,19 @@ suscepible to write boilerplate code and end up writing some tricky and unmainta
 Lets think of a banking text command interface that offers two basic services: BALANCE consults and
 Money TRANSFERS via the following text commands:
 
-1. Balance check command
+* Balance check command
 
 ```pre
 BAL <account_number> <pin_code>
 ```
-__Success Result__: "The balance of the account X is Y";
+___Expected Result__: "The balance of the account X is Y"
 
-2. Money transfer
+* Money transfer
 
 ```pre
-TRANSF <from_account> <amount> <to_account> <pin_code>;
+TRANSF <from_account> <amount> <to_account> <pin_code>
 ```
-__Success Result__: "You have successfully transfered X from Y to Z";
+__Expected Result__: "You have successfully transfered X from Y to Z"
 
 These two services have a few things in common:
 * They both receive arguments and need to access them in order to proceed.
@@ -46,9 +46,9 @@ like this one:
 BAL 1021212 1234
 ```
 
-It will automatically fetch the parameters using the names with have given them in the mapping string and will store their respective values into
+It will automatically fetch the parameters using the names you have given them in the mapping string and will store their respective values in
 a Key-Value variable that will be accessible to the service method.
-*You wont have to SubString the command. The values will already be there for you*.
+__The values will already be there for you.__
 
 You will be able to retrive them simply by doint this:
 
@@ -69,7 +69,7 @@ public void CheckBalance(){
 ## Parsers
 
 In the Neolitic world, a Parser is an object that receives a string object and parses it to a different format.
-Why you need Parsers? Because when Neolitic reads the arguments of a command to store then into the key-Value pairs
+Why you need Parsers? Because when Neolitic reads the arguments of a command to store then in the key-Value pairs
 variable, it stores them as string object, which means, if you try to Get an argument parsing it to a type different
 from String, an InvalidCastException will be thrown:
 
