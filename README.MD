@@ -8,19 +8,20 @@ suscepible to write boilerplate code and end up writing some tricky and unmainta
 Lets think of a banking text command interface that offers two basic services: BALANCE consults and
 Money TRANSFERS via the following text commands:
 
-* Balance check command
+### Balance check command
 
 ```pre
 BAL <account_number> <pin_code>
+Expected Result_: "The balance of the account X is Y"
 ```
-___Expected Result__: "The balance of the account X is Y"
 
-* Money transfer
+
+### Money transfer command
 
 ```pre
 TRANSF <from_account> <amount> <to_account> <pin_code>
+Expected Result: "You have successfully transfered X from Y to Z"
 ```
-__Expected Result__: "You have successfully transfered X from Y to Z"
 
 These two services have a few things in common:
 * They both receive arguments and need to access them in order to proceed.
